@@ -9,17 +9,25 @@ import numpy as np
 
 #Initialize camera
 c = picamera.PiCamera()
-wait(2)
+sleep(2)
 
-#Get camera info (resolution)
-resolution = c.resolution
-W_cam = resolution[0]
-H_cam = resolution[1]
+#Set camera info (resolution)
+W_cam = 1376
+H_cam = 768
+c.resolution = (W_cam,H_cam)
 
 
 #Try autocropping...
-testframe = np.empty((W_cam, H_cam, 3), dtype=np.uint8)
+testframe = np.empty((H_cam,W_cam,3), dtype=np.uint8)
 c.capture(testframe, 'rgb')
+brightness = np.sum(testframe, axis=2)
+colsum = np.sum(brightness, axis=0)
+colsumthresh = 15000
+colsum = (colsum>colsumthresh)*colsum
+xinds = np.arange(W_cam)
+np.sum(xinds*colsum)/np.sum(colsum)
+
+
 
 
 # Wait indefinitely until the user terminates the script
