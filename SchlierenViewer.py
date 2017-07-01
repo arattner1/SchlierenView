@@ -40,9 +40,26 @@ W_Spot = 1.5*(np.where(colsum>0)[0][-1] - np.where(colsum>0)[0][0])
 yinds = np.arange(H_cam)
 Y_CM_Spot = np.sum(yinds*rowsum)/(np.sum(rowsum)+1)
 H_Spot = 1.5*(np.where(rowsum>0)[0][-1] - np.where(rowsum>0)[0][0])
+S_spot = max(W_Spot, H_spot)
+
+#Convert spot into camera units (0-1)
+x_cam_spot = (X_CM_Spot-S_Spot/2.0)/W_cam
+y_cam_spot = (Y_CM_Spot-S_Spot/2.0)/H_cam
+w_cam_spot = S_Spot/W_cam
+h_cam_spot = S_Spot/H_cam
+
+if (x_cam_spot + w_cam_spot/2.0) > 1.0:
+	x_cam_spot = 1.0 - w_cam_spot
+if (y_cam_spot + h_cam_spot/2.0) > 1.0:
+	y_cam_spot = 1.0 - h_cam_spot
+
 
 #Camera display
-c.zoom = ((X_CM_Spot-W_Spot/2)/W_cam,0.0, W_Spot/W_cam,1.0)  
+c.zoom = (x_cam_spot,0.0, w_cam_spot,1.0)  
+c.start_preview()
+sleep(10)
+c.stop_preview()
+c.close()
 
 
 # Wait indefinitely until the user terminates the script
