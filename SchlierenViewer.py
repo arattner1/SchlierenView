@@ -6,7 +6,7 @@
 import picamera
 from time import sleep
 import numpy as np
-
+from datetime import datetime as dt
 
 #Initialize camera
 c = picamera.PiCamera()
@@ -38,10 +38,10 @@ rowsum = (rowsum>rowsumthresh)*rowsum
 #Find spot size
 xinds = np.arange(W_cam)
 X_CM_spot = np.sum(xinds*colsum)/(np.sum(colsum)+1)
-W_spot = 1.1*(np.where(colsum>0)[0][-1] - np.where(colsum>0)[0][0])
+W_spot = 0.9*(np.where(colsum>0)[0][-1] - np.where(colsum>0)[0][0])
 yinds = np.arange(H_cam)
 Y_CM_spot = np.sum(yinds*rowsum)/(np.sum(rowsum)+1)
-H_spot = 1.1*(np.where(rowsum>0)[0][-1] - np.where(rowsum>0)[0][0])
+H_spot = 0.9*(np.where(rowsum>0)[0][-1] - np.where(rowsum>0)[0][0])
 S_spot = max(W_spot, H_spot)
 #S_spot = 200
 
@@ -54,7 +54,7 @@ h_cam_spot = S_spot/H_cam
 if (x_cam_spot + w_cam_spot/2.0) > 1.0:
 	x_cam_spot = 1.0 - w_cam_spot
 if (y_cam_spot + h_cam_spot/2.0) > 1.0:
-	y_cam_spot = 1.0 - h_cam_spot
+	y_cam_spot = 1.0 - 0.9*h_cam_spot
 
 #Final camera settings
 c.sharpness = 50
@@ -69,14 +69,19 @@ c.video_stabilization = False
 c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)  
 c.start_preview()
 
-#sleep(10)
+#At this point either save a picture or exit
+while True:
+	inp = input()
+	
+	if inp == "s":
+		filename = "/home/pi/Pictures/" + str(dt.now()) + ".jpg"
+		c.capture(filename, use_video_port=True)
+	elif inp == "x":
+		break
+	
+
 
 #End routine
-input()
 c.stop_preview()
 c.close()
 
-
-# Wait indefinitely until the user terminates the script
-#while True:
-#    sleep(1)
