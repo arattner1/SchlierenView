@@ -35,11 +35,14 @@ rowsumthresh = 25000
 rowsum = (rowsum>rowsumthresh)*rowsum
 #Find spot size
 xinds = np.arange(W_cam)
-X_CM_Spot = np.sum(xinds*colsum)/np.sum(colsum)
+X_CM_Spot = np.sum(xinds*colsum)/(np.sum(colsum)+1)
 W_Spot = 1.5*(np.where(colsum>0)[0][-1] - np.where(colsum>0)[0][0])
 yinds = np.arange(H_cam)
-Y_CM_Spot = np.sum(yinds*rowsum)/np.sum(rowsum)
+Y_CM_Spot = np.sum(yinds*rowsum)/(np.sum(rowsum)+1)
 H_Spot = 1.5*(np.where(rowsum>0)[0][-1] - np.where(rowsum>0)[0][0])
+
+#Camera display
+c.zoom = ((X_CM_Spot-W_Spot/2)/W_cam,0.0, W_Spot/W_cam,1.0)  
 
 
 # Wait indefinitely until the user terminates the script
