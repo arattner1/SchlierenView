@@ -3,7 +3,7 @@
 # Alex Rattner, 2017-09-26
 
 #Load in used modules
-#!import picamera
+import picamera
 from time import sleep
 import numpy as np
 from datetime import datetime as dt
@@ -25,21 +25,21 @@ def BoundWindow(x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot):
 GetChar = _Getch()
 
 #Initialize camera
-#!c = picamera.PiCamera()
+c = picamera.PiCamera()
 #Wait two seconds for camera to start-up
 sleep(2)
 
 #Set camera info (resolution)
 W_cam = 1376
 H_cam = 768
-#!c.resolution = (W_cam,H_cam)
+c.resolution = (W_cam,H_cam)
 
 
 #Final camera settings
-#!c.sharpness = 50
-#!c.brightness = 70
-#!c.saturation = 30
-#!c.video_stabilization = False
+c.sharpness = 50
+c.brightness = 70
+c.saturation = 30
+c.video_stabilization = False
 
 
 #Initialize camera positions:
@@ -54,14 +54,14 @@ if os.path.isfile("Positions.p"):
 
 
 #Camera display
-#!c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)  
-#!c.start_preview()
+c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)  
+c.start_preview()
 
 #At this point either save a picture or exit
 while True:
     inp = GetChar()
     
-    print(inp)
+    #print(inp)
 
     #Zoom in
     if inp == "=": 
@@ -70,9 +70,9 @@ while True:
         y_cam_spot = y_cam_spot + 0.025*h_cam_spot
         h_cam_spot = 0.95*h_cam_spot
         (x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot) = BoundWindow(x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot)
-        print(x_cam_spot, ", ", y_cam_spot, ", ", w_cam_spot, ", ", h_cam_spot)
+        #print(x_cam_spot, ", ", y_cam_spot, ", ", w_cam_spot, ", ", h_cam_spot)
         pickle.dump( (x_cam_spot,y_cam_spot,w_cam_spot,h_cam_spot), open("Positions.p", "wb") )
-        #!c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)  
+        c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)  
     #Zoom in
     elif inp == "-":
         w_cam_spot = (1.0/0.95)*w_cam_spot
@@ -80,46 +80,46 @@ while True:
         h_cam_spot = (1.0/0.95)*h_cam_spot
         y_cam_spot = y_cam_spot - 0.025*h_cam_spot
         (x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot) = BoundWindow(x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot)
-        print(x_cam_spot, ", ", y_cam_spot, ", ", w_cam_spot, ", ", h_cam_spot)
+        #print(x_cam_spot, ", ", y_cam_spot, ", ", w_cam_spot, ", ", h_cam_spot)
         pickle.dump( (x_cam_spot,y_cam_spot,w_cam_spot,h_cam_spot), open("Positions.p", "wb") )
-        #!c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)  
+        c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)  
     #Go left
     elif inp == "a":
-        x_cam_spot = x_cam_spot - 0.025*w_cam_spot
-        (x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot) = BoundWindow(x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot)
-        print(x_cam_spot, ", ", y_cam_spot, ", ", w_cam_spot, ", ", h_cam_spot)
-        pickle.dump( (x_cam_spot,y_cam_spot,w_cam_spot,h_cam_spot), open("Positions.p", "wb") )
-        #!c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)
-    #Go right
-    elif inp == "d":
         x_cam_spot = x_cam_spot + 0.025*w_cam_spot
         (x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot) = BoundWindow(x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot)
-        print(x_cam_spot, ", ", y_cam_spot, ", ", w_cam_spot, ", ", h_cam_spot)
+        #print(x_cam_spot, ", ", y_cam_spot, ", ", w_cam_spot, ", ", h_cam_spot)
         pickle.dump( (x_cam_spot,y_cam_spot,w_cam_spot,h_cam_spot), open("Positions.p", "wb") )
-        #!c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)
+        c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)
+    #Go right
+    elif inp == "d":
+        x_cam_spot = x_cam_spot - 0.025*w_cam_spot
+        (x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot) = BoundWindow(x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot)
+        #print(x_cam_spot, ", ", y_cam_spot, ", ", w_cam_spot, ", ", h_cam_spot)
+        pickle.dump( (x_cam_spot,y_cam_spot,w_cam_spot,h_cam_spot), open("Positions.p", "wb") )
+        c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)
     #Go up
     elif inp == "w":
         y_cam_spot = y_cam_spot + 0.025*h_cam_spot
         (x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot) = BoundWindow(x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot)
-        print(x_cam_spot, ", ", y_cam_spot, ", ", w_cam_spot, ", ", h_cam_spot)
+        #print(x_cam_spot, ", ", y_cam_spot, ", ", w_cam_spot, ", ", h_cam_spot)
         pickle.dump( (x_cam_spot,y_cam_spot,w_cam_spot,h_cam_spot), open("Positions.p", "wb") )
-        #!c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)
+        c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)
     #Go down
     elif inp == "s":
         y_cam_spot = y_cam_spot - 0.025*h_cam_spot
         (x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot) = BoundWindow(x_cam_spot, y_cam_spot, w_cam_spot, h_cam_spot)
-        print(x_cam_spot, ", ", y_cam_spot, ", ", w_cam_spot, ", ", h_cam_spot)
+        #print(x_cam_spot, ", ", y_cam_spot, ", ", w_cam_spot, ", ", h_cam_spot)
         pickle.dump( (x_cam_spot,y_cam_spot,w_cam_spot,h_cam_spot), open("Positions.p", "wb") )
-        #!c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)  
+        c.zoom = (x_cam_spot,y_cam_spot, w_cam_spot,h_cam_spot)  
 
-    elif inp == "s":
+    elif inp == "S":
         filename = "/home/pi/Pictures/" + str(dt.now()) + ".jpg"
-        #!c.capture(filename, use_video_port=True)
+        c.capture(filename, use_video_port=True)
     elif inp == "x":
         break
 
 
 #End routine
-#!c.stop_preview()
-#!c.close()
+c.stop_preview()
+c.close()
 
